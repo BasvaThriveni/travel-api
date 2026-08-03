@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Bucket List — 10 Countries I Want to Visit</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>🌍 10 Countries I Dream of Visiting</h1>
+    <p>Data also available as raw JSON at <code>/api/countries</code></p>
+  </header>
+
+  <main>
+    {% for c in countries %}
+    <section class="card">
+      <div class="text">
+        <h2>{{ loop.index }}. {{ c.country }}</h2>
+        <h3>{{ c.spot }}</h3>
+        <p>{{ c.details }}</p>
+      </div>
+      <div class="visual">
+        <img src="{{ c.image }}" alt="{{ c.spot }}">
+        <iframe
+          src="https://www.google.com/maps?q={{ c.lat }},{{ c.lng }}&output=embed"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+</body>
+</html>
