@@ -8,27 +8,48 @@
 <body>
   <header>
     <h1>🌍 10 Countries I Dream of Visiting</h1>
-    <p>Data also available as raw JSON at <code>/api/countries</code></p>
+    <p>This page is built entirely from <code>/api/countries</code> — open DevTools → Network to see the request.</p>
   </header>
 
-  <main>
-    {% for c in countries %}
-    <section class="card">
-      <div class="text">
-        <h2>{{ loop.index }}. {{ c.country }}</h2>
-        <h3>{{ c.spot }}</h3>
-        <p>{{ c.details }}</p>
-      </div>
-      <div class="visual">
-        <img src="{{ c.image }}" alt="{{ c.spot }}">
-        <iframe
-          src="https://www.google.com/maps?q={{ c.lat }},{{ c.lng }}&output=embed"
-          loading="lazy"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </section>
-    {% endfor %}
+  <main id="country-list">
+    <p style="text-align:center;">Loading countries from the API...</p>
   </main>
+
+  <script>
+    // This fetch call is what shows up in the Network tab as a request to /api/countries.
+    // The whole page below is built from that JSON response - nothing is baked in by the server.
+    fetch('/api/countries')
+      .then(response => response.json())
+      .then(countries => {
+        const main = document.getElementById('country-list');
+        main.innerHTML = ''; // clear the "Loading..." message
+
+        countries.forEach((c, index) => {
+          const section = document.createElement('section');
+          section.className = 'card';
+          section.innerHTML = `
+            <div class="text">
+              <h2>${index + 1}. ${c.country}</h2>
+              <h3>${c.spot}</h3>
+              <p>${c.details}</p>
+            </div>
+            <div class="visual">
+              <img src="${c.image}" alt="${c.spot}">
+              <iframe
+                src="https://www.google.com/maps?q=${c.lat},${c.lng}&output=embed"
+                loading="lazy"
+                allowfullscreen>
+              </iframe>
+            </div>
+          `;
+          main.appendChild(section);
+        });
+      })
+      .catch(err => {
+        document.getElementById('country-list').innerHTML =
+          '<p style="text-align:center;color:red;">Failed to load data from /api/countries</p>';
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
