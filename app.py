@@ -90,8 +90,12 @@ def api_countries():
 
 @app.route("/")
 def home():
-    """Human-friendly page: shows each country's details, map, and image."""
-    return render_template("index.html", countries=COUNTRIES)
+    """
+    Serves an empty page shell. The browser's own JavaScript then calls
+    /api/countries and builds the page from that response - so the API
+    call is now visible in the Network tab, exactly like a real web app.
+    """
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
